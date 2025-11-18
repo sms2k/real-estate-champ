@@ -1,0 +1,260 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  REALTOR
+}
+
+enum PropertyStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum PlatformType {
+  FACEBOOK
+  INSTAGRAM
+  LINKEDIN
+  GOOGLE_BUSINESS
+  WORDPRESS
+}
+
+enum ContentStatus {
+  PENDING
+  GENERATED
+  PUBLISHED
+  FAILED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  password      String?
+  image         String?
+  role          UserRole  @default(REALTOR)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  properties     Property[]
+  accounts       Account[]
+  sessions       Session[]
+  socialAccounts SocialAccount[]
+  webhooks       Webhook[]
+
+  @@map("users")
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+  @@map("verification_tokens")
+}
+
+// Social media accounts connected by users
+model SocialAccount {
+  id                String       @id @default(cuid())
+  userId            String
+  platform          PlatformType
+  platformUserId    String
+  platformUsername  String?
+  accessToken       String
+  refreshToken      String?
+  expiresAt         DateTime?
+  scope             String?
+  pageId            String?      // For Facebook pages
+  pageAccessToken   String?      // For Facebook page tokens
+  isActive          Boolean      @default(true)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contents GeneratedContent[]
+
+  @@unique([userId, platform, platformUserId])
+  @@map("social_accounts")
+}
+
+// Webhook configurations
+model Webhook {
+  id        String   @id @default(cuid())
+  userId    String
+  name      String
+  url       String
+  secret    String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  contents GeneratedContent[]
+
+  @@map("webhooks")
+}
+
+// WordPress site connections
+model WordPressSite {
+  id        String   @id @default(cuid())
+  name      String
+  siteUrl   String
+  username  String
+  appPassword String // WordPress application password
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  contents GeneratedContent[]
+
+  @@map("wordpress_sites")
+}
+
+// Property listings
+model Property {
+  id          String         @id @default(cuid())
+  userId      String
+  title       String
+  description String?
+  address     String?
+  city        String?
+  state       String?
+  zipCode     String?
+  price       Float?
+  bedrooms    Int?
+  bathrooms   Float?
+  squareFeet  Int?
+  propertyType String?
+  status      PropertyStatus @default(DRAFT)
+  dataFilePath String?       // Path to the JSON file with full property data
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  user   User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  images PropertyImage[]
+  videos PropertyVideo[]
+  contents GeneratedContent[]
+
+  @@map("properties")
+}
+
+model PropertyImage {
+  id         String   @id @default(cuid())
+  propertyId String
+  filePath   String
+  fileName   String
+  fileSize   Int
+  mimeType   String
+  order      Int      @default(0)
+  caption    String?
+  isMain     Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("property_images")
+}
+
+model PropertyVideo {
+  id         String   @id @default(cuid())
+  propertyId String
+  filePath   String
+  fileName   String
+  fileSize   Int
+  duration   Int?     // in seconds
+  thumbnail  String?
+  createdAt  DateTime @default(now())
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("property_videos")
+}
+
+// Generated content (blog posts, social media posts, etc.)
+model GeneratedContent {
+  id              String        @id @default(cuid())
+  propertyId      String
+  contentType     String        // 'blog', 'facebook', 'instagram', 'linkedin', 'google_business'
+  platform        PlatformType?
+  title           String?
+  content         String
+  images          String[]      // Array of image paths
+  videoPath       String?
+  status          ContentStatus @default(PENDING)
+  publishedAt     DateTime?
+  scheduledFor    DateTime?
+  errorMessage    String?
+  socialAccountId String?
+  webhookId       String?
+  wordPressSiteId String?
+  metadata        Json?         // Additional platform-specific data
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  property      Property       @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  socialAccount SocialAccount? @relation(fields: [socialAccountId], references: [id])
+  webhook       Webhook?       @relation(fields: [webhookId], references: [id])
+  wordPressSite WordPressSite? @relation(fields: [wordPressSiteId], references: [id])
+
+  @@map("generated_contents")
+}
+
+// Admin API keys (managed by super admin)
+model ApiKey {
+  id        String   @id @default(cuid())
+  name      String   // e.g., "Google AI", "Facebook", "LinkedIn"
+  key       String
+  secret    String?
+  metadata  Json?    // Additional configuration
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("api_keys")
+}
