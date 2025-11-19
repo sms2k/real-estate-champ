@@ -2,6 +2,25 @@
 
 AI-powered property marketing platform that transforms property listings into engaging blog posts, social media content, and videos.
 
+## 🚀 Two Deployment Modes
+
+**RECOMMENDED: WordPress Plugin + PWA (Mobile App)**
+- Install the WordPress plugin on your site
+- Deploy the Next.js app as a Progressive Web App (PWA)
+- Realtors use the mobile app to create listings
+- WordPress handles backend, auth, and content storage
+- Perfect for agencies with existing WordPress sites
+
+**Alternative: Standalone Mode**
+- Deploy Next.js app with its own database
+- Full-featured web application
+- Requires PostgreSQL setup and management
+- Best for custom deployments
+
+📱 **Most users should use the WordPress Plugin mode for the best mobile experience!**
+
+See [WordPress Plugin Installation](#wordpress-plugin-installation) below.
+
 ## Features
 
 - **AI Chat Interface**: Gather property information through natural conversation with Google Gemini
@@ -24,12 +43,75 @@ AI-powered property marketing platform that transforms property listings into en
 
 ## Prerequisites
 
+**For WordPress Plugin Mode:**
+- WordPress 5.6+ with PHP 7.4+
+- Node.js 18+ and npm (for PWA deployment)
+- Google AI API key
+
+**For Standalone Mode:**
 - Node.js 18+ and npm
 - PostgreSQL database
 - Google AI API key
 - Social media developer accounts (Facebook, LinkedIn, Google)
 
-## Installation
+## WordPress Plugin Installation
+
+**This is the recommended setup for most users!** The WordPress plugin provides the backend while the Next.js app becomes a mobile-friendly PWA.
+
+### Step 1: Install WordPress Plugin
+
+1. Copy the plugin to your WordPress installation:
+   ```bash
+   cp -r wordpress-plugin/real-estate-champ /path/to/wordpress/wp-content/plugins/
+   ```
+
+2. Activate the plugin in WordPress Admin > Plugins
+
+3. The plugin will automatically create necessary database tables
+
+### Step 2: Configure Plugin Settings
+
+1. Go to Real Estate Champ > Settings in WordPress Admin
+2. Enter your Google AI API Key
+3. (Optional) Configure social media app credentials
+4. Enable PWA and note the settings
+
+### Step 3: Deploy PWA App
+
+1. Build the Next.js app:
+   ```bash
+   npm install
+   cp .env.example .env
+   # Edit .env and set:
+   # NEXT_PUBLIC_WORDPRESS_URL="https://your-wordpress-site.com"
+
+   npm run build
+   ```
+
+2. Deploy to Vercel (recommended):
+   - Push code to GitHub
+   - Import project in Vercel
+   - Add environment variable: `NEXT_PUBLIC_WORDPRESS_URL`
+   - Deploy
+
+3. Update WordPress plugin settings:
+   - Go to Real Estate Champ > Settings
+   - Enable PWA
+   - Enter your deployed PWA URL (e.g., https://app.yoursite.com)
+   - Save settings
+
+### Step 4: Use the Mobile App
+
+1. Visit your PWA URL on your phone
+2. Tap "Add to Home Screen" to install
+3. Login with WordPress credentials
+4. Start creating property listings!
+
+📖 **Full plugin documentation:** See `wordpress-plugin/README.md`
+
+---
+
+## Standalone Installation
 
 1. **Clone the repository**
    ```bash
