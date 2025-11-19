@@ -15,6 +15,8 @@ const nextConfig: NextConfig = {
       bodySizeLimit: '10mb',
     },
   },
+  // Add empty turbopack config to silence warning about webpack config
+  turbopack: {},
 };
 
 export default withPWA({
@@ -137,7 +139,7 @@ export default withPWA({
       }
     },
     {
-      urlPattern: ({ url }) => {
+      urlPattern: ({ url }: { url: URL }) => {
         const isSameOrigin = self.origin === url.origin;
         if (!isSameOrigin) return false;
         const pathname = url.pathname;

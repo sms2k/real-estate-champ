@@ -89,6 +89,7 @@ export const authConfig: NextAuthConfig = {
     async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
+        // @ts-ignore - custom role property
         token.role = user.role;
       }
 
@@ -103,7 +104,9 @@ export const authConfig: NextAuthConfig = {
     },
     async session({ session, token }) {
       if (session.user) {
+        // @ts-ignore - custom properties
         session.user.id = token.id as string;
+        // @ts-ignore - custom role property
         session.user.role = token.role as string;
       }
       return session;

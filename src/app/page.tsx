@@ -112,7 +112,7 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {PRICING_PLANS.map((plan) => (
+            {PRICING_PLANS.map((plan: any) => (
               <PricingCard key={plan.id} plan={plan} />
             ))}
           </div>
