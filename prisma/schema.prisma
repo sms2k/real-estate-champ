@@ -263,3 +263,34 @@ model ApiKey {
 
   @@map("api_keys")
 }
+
+// License keys for software activation
+model License {
+  id           String    @id @default(cuid())
+  licenseKey   String    @unique  // Format: XXXX-XXXX-XXXX-XXXX
+  email        String             // Customer email
+  customerName String?            // Customer name
+  isActivated  Boolean   @default(false)
+  activatedAt  DateTime?
+  activatedBy  String?            // User ID who activated
+  expiresAt    DateTime?          // Optional expiration date
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([email])
+  @@map("licenses")
+}
+
+// Platform-wide settings for white-labeling
+model Settings {
+  id           String   @id @default(cuid())
+  key          String   @unique  // e.g., "company_name", "company_logo"
+  value        String                  // The setting value
+  description  String?                 // What this setting controls
+  category     String   @default("general") // "branding", "general", "email", etc.
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([category])
+  @@map("settings")
+}
