@@ -24,6 +24,7 @@ export const POST = withErrorHandler(
     const { id: propertyId } = await params;
 
     // Check if user has reached content generation limit
+    await checkUsageLimitMiddleware(userId, "content");
 
     const body = await request.json();
     const validated = contentGenerationSchema.parse(body);
@@ -32,7 +33,7 @@ export const POST = withErrorHandler(
     const property = await prisma.property.findFirst({
       where: {
         id: propertyId,
-              contentType: platform,
+        userId,
       },
       include: {
         images: true,
@@ -52,7 +53,6 @@ export const POST = withErrorHandler(
         const savedBlog = await prisma.generatedContent.create({
           data: {
             propertyId,
-              contentType: platform,
             contentType: "blog",
             platform: "WORDPRESS",
             title: blogPost.title,
@@ -124,10 +124,10 @@ export const POST = withErrorHandler(
             await prisma.propertyImage.create({
               data: {
                 propertyId,
-              contentType: platform,
                 filePath: video.videoUrl,
-                fileType: "video/mp4",
-                isVideo: true,
+                fileName: "generated-video.mp4",
+                fileSize: 0,
+                mimeType: "video/mp4",
               },
             });
             results.push({ type: "video", success: true, url: video.videoUrl });
@@ -152,10 +152,10 @@ export const POST = withErrorHandler(
             await prisma.propertyImage.create({
               data: {
                 propertyId,
-              contentType: platform,
                 filePath: edited.editedPath,
-                fileType: image.fileType,
-                isEdited: true,
+                fileName: `edited-${image.fileName || "image.jpg"}`,
+                fileSize: image.fileSize || 0,
+                mimeType: image.mimeType || "image/jpeg",
               },
             });
           }
@@ -172,6 +172,7 @@ export const POST = withErrorHandler(
     }
 
     // Increment content generation counter
+    await incrementUsage(userId, "content", results.length);
 
     return apiSuccess({
       message: "Content generation completed",

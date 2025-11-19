@@ -16,6 +16,7 @@ export async function requireAuth() {
 
 export async function requireAdmin() {
   const user = await requireAuth();
+  // @ts-ignore - custom role property
   if (user.role !== "SUPER_ADMIN") {
     redirect("/dashboard");
   }

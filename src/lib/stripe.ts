@@ -2,7 +2,7 @@ import Stripe from 'stripe';
 import { prisma } from './db';
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
+  apiVersion: '2025-11-17.clover' as any,
   typescript: true,
 });
 
@@ -91,8 +91,8 @@ export async function handleSubscriptionChange(subscription: Stripe.Subscription
       subscriptionId: subscription.id,
       subscriptionStatus: subscription.status.toUpperCase() as any,
       subscriptionPlan: plan,
-      subscriptionEndDate: subscription.current_period_end
-        ? new Date(subscription.current_period_end * 1000)
+      subscriptionEndDate: (subscription as any).current_period_end
+        ? new Date((subscription as any).current_period_end * 1000)
         : null,
       propertiesLimit: limits.properties,
       monthlyContentLimit: limits.monthlyContent,
@@ -108,8 +108,8 @@ export async function handleSubscriptionChange(subscription: Stripe.Subscription
       stripePriceId: subscription.items.data[0].price.id,
       plan,
       status: subscription.status.toUpperCase() as any,
-      stripeCurrentPeriodEnd: subscription.current_period_end
-        ? new Date(subscription.current_period_end * 1000)
+      stripeCurrentPeriodEnd: (subscription as any).current_period_end
+        ? new Date((subscription as any).current_period_end * 1000)
         : null,
     },
     update: {
@@ -117,8 +117,8 @@ export async function handleSubscriptionChange(subscription: Stripe.Subscription
       stripePriceId: subscription.items.data[0].price.id,
       plan,
       status: subscription.status.toUpperCase() as any,
-      stripeCurrentPeriodEnd: subscription.current_period_end
-        ? new Date(subscription.current_period_end * 1000)
+      stripeCurrentPeriodEnd: (subscription as any).current_period_end
+        ? new Date((subscription as any).current_period_end * 1000)
         : null,
     },
   });
@@ -222,7 +222,7 @@ export async function hasActiveSubscription(userId: string): Promise<boolean> {
 
   if (!user) return false;
 
-  return (
+  return Boolean(
     user.subscriptionStatus === 'ACTIVE' ||
     user.subscriptionStatus === 'TRIALING' ||
     (user.subscriptionEndDate && user.subscriptionEndDate > new Date())

@@ -53,10 +53,9 @@ export const POST = withErrorHandler(
             data: {
               propertyId,
               filePath: result.filePath,
-              fileName: result.fileName,
+              fileName: result.fileName || file.name,
               fileSize: result.fileSize || 0,
-              fileType: file.type,
-              isVideo: false,
+              mimeType: file.type,
             },
           });
 

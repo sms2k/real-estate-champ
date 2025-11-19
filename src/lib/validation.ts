@@ -110,7 +110,7 @@ export function validateData<T>(schema: z.ZodSchema<T>, data: unknown): {
  * Format Zod errors for API response
  */
 export function formatZodErrors(errors: z.ZodError) {
-  return errors.errors.map(err => ({
+  return errors.issues.map(err => ({
     field: err.path.join('.'),
     message: err.message,
   }));

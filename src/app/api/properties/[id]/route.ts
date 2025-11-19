@@ -23,7 +23,7 @@ export const GET = withErrorHandler(
       },
       include: {
         images: true,
-        contentPosts: {
+        contents: {
           orderBy: { createdAt: "desc" },
         },
       },

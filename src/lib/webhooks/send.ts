@@ -128,9 +128,7 @@ export async function testWebhook(
       event: "content.generated",
       propertyId: "test-property-id",
       contentType: "test",
-      data: {
-        message: "This is a test webhook from RealEstateChamp",
-      },
+      data: {},
       timestamp: new Date(),
     };
 
