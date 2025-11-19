@@ -55,8 +55,12 @@ export async function generateBlogPostSimple(property: {
   squareFeet?: number | null;
   propertyType?: string | null;
 }): Promise<BlogPost> {
+  if (!process.env.GOOGLE_AI_API_KEY) {
+    throw new Error("Google AI API key not configured. Please set GOOGLE_AI_API_KEY environment variable.");
+  }
+
   const { GoogleGenerativeAI } = require("@google/generative-ai");
-  const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!);
+  const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
 
   const prompt = `
@@ -125,8 +129,12 @@ export async function generateSocialPostSimple(
   },
   platform: string
 ): Promise<SocialMediaPost> {
+  if (!process.env.GOOGLE_AI_API_KEY) {
+    throw new Error("Google AI API key not configured. Please set GOOGLE_AI_API_KEY environment variable.");
+  }
+
   const { GoogleGenerativeAI } = require("@google/generative-ai");
-  const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!);
+  const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
   const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
 
   const specs: Record<string, { max: number; hashtags: number; style: string }> = {

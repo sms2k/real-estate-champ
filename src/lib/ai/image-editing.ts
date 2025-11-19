@@ -1,5 +1,5 @@
 import axios from "axios";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
 
 /**
  * Image editing and enhancement using Google Imagen 3
@@ -8,7 +8,20 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
  * This implementation uses available APIs and provides structure for future updates.
  */
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!);
+// Lazy initialization to handle build time when API key might not be set
+let genAI: GoogleGenerativeAI | null = null;
+
+function initializeGemini() {
+  if (!genAI && process.env.GOOGLE_AI_API_KEY) {
+    genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
+  }
+
+  if (!genAI) {
+    throw new Error("Google AI API key not configured. Please set GOOGLE_AI_API_KEY environment variable.");
+  }
+
+  return genAI;
+}
 
 export interface ImageEditOptions {
   enhance?: boolean;          // Auto-enhance lighting and colors
@@ -227,7 +240,8 @@ export async function batchEditImages(
  */
 export async function analyzeImageForEdits(imagePath: string): Promise<ImageEditOptions> {
   // Use Gemini vision model to analyze the image and suggest edits
-  const visionModel = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+  const ai = initializeGemini();
+  const visionModel = ai.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
 
   const prompt = `
 Analyze this real estate property image and suggest editing improvements.

@@ -9,6 +9,10 @@ import { requireAuthMiddleware } from "@/lib/api/middleware";
 import { chatMessageSchema } from "@/lib/validation";
 import { chatWithGemini, extractPropertyDataFromChat } from "@/lib/ai/gemini";
 
+// Force dynamic runtime to prevent build-time pre-rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 /**
  * POST /api/chat - Chat with AI about property
  */

@@ -1,11 +1,24 @@
 import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
 import { PropertyData, BlogPost, SocialMediaPost } from "@/types";
 
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY!);
+// Lazy initialization to handle build time when API key might not be set
+let genAI: GoogleGenerativeAI | null = null;
+let textModel: GenerativeModel | null = null;
+let visionModel: GenerativeModel | null = null;
 
-// Initialize different models
-const textModel = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
-const visionModel = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+function initializeGemini() {
+  if (!genAI && process.env.GOOGLE_AI_API_KEY) {
+    genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
+    textModel = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+    visionModel = genAI.getGenerativeModel({ model: "gemini-2.0-flash-exp" });
+  }
+
+  if (!textModel) {
+    throw new Error("Google AI API key not configured. Please set GOOGLE_AI_API_KEY environment variable.");
+  }
+
+  return { textModel, visionModel };
+}
 
 /**
  * Chat with Gemini to extract property information
@@ -14,7 +27,8 @@ export async function chatWithGemini(
   messages: Array<{ role: string; content: string }>,
   context?: string
 ): Promise<string> {
-  const chat = textModel.startChat({
+  const { textModel: model } = initializeGemini();
+  const chat = model.startChat({
     history: messages.slice(0, -1).map(msg => ({
       role: msg.role === "user" ? "user" : "model",
       parts: [{ text: msg.content }],
@@ -78,7 +92,8 @@ Generate a blog post in JSON format with the following structure:
 Make it engaging, highlight the property's best features, and include information about the neighborhood and lifestyle.
 `;
 
-  const result = await textModel.generateContent(prompt);
+  const { textModel: model } = initializeGemini();
+  const result = await model.generateContent(prompt);
   const responseText = result.response.text();
 
   // Extract JSON from response (handling markdown code blocks)
@@ -151,7 +166,8 @@ Return JSON:
 }
 `;
 
-  const result = await textModel.generateContent(prompt);
+  const { textModel: model } = initializeGemini();
+  const result = await model.generateContent(prompt);
   const responseText = result.response.text();
 
   const jsonMatch = responseText.match(/```json\n([\s\S]*?)\n```/) || responseText.match(/(\{[\s\S]*\})/);
@@ -218,7 +234,8 @@ Extract the following information if available and return as JSON:
 Only include information that was explicitly mentioned. Use null for missing data.
 `;
 
-  const result = await textModel.generateContent(prompt);
+  const { textModel: model } = initializeGemini();
+  const result = await model.generateContent(prompt);
   const responseText = result.response.text();
 
   const jsonMatch = responseText.match(/```json\n([\s\S]*?)\n```/) || responseText.match(/(\{[\s\S]*\})/);
@@ -251,7 +268,8 @@ Focus on asking about:
 Make questions conversational and easy to answer.
 `;
 
-  const result = await textModel.generateContent(prompt);
+  const { textModel: model } = initializeGemini();
+  const result = await model.generateContent(prompt);
   const responseText = result.response.text();
 
   const jsonMatch = responseText.match(/```json\n([\s\S]*?)\n```/) || responseText.match(/(\[[\s\S]*\])/);

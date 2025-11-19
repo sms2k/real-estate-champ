@@ -15,6 +15,10 @@ import { generateBlogPostSimple, generateSocialPostSimple } from "@/lib/ai/helpe
 import { generatePropertyVideo } from "@/lib/ai/video-generation";
 import { editPropertyImage } from "@/lib/ai/image-editing";
 
+// Force dynamic runtime to prevent build-time pre-rendering
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';
+
 /**
  * POST /api/properties/[id]/generate - Generate content for property
  */
