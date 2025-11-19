@@ -15,21 +15,6 @@ enum UserRole {
   REALTOR
 }
 
-enum SubscriptionStatus {
-  ACTIVE
-  CANCELED
-  PAST_DUE
-  TRIALING
-  INCOMPLETE
-}
-
-enum SubscriptionPlan {
-  FREE
-  STARTER
-  PROFESSIONAL
-  ENTERPRISE
-}
-
 enum PropertyStatus {
   DRAFT
   PUBLISHED
@@ -60,22 +45,9 @@ model User {
   image         String?
   role          UserRole  @default(REALTOR)
 
-  // SaaS Subscription fields
-  stripeCustomerId       String?              @unique
-  subscriptionPlan       SubscriptionPlan     @default(FREE)
-  subscriptionStatus     SubscriptionStatus?
-  subscriptionId         String?              @unique
-  subscriptionEndDate    DateTime?
-  trialEndsAt            DateTime?
-
-  // Usage limits based on plan
-  propertiesLimit        Int                  @default(5)  // FREE: 5, STARTER: 10, PRO: 50, ENTERPRISE: unlimited
-  monthlyContentLimit    Int                  @default(10) // FREE: 10, STARTER: 50, PRO: 200, ENTERPRISE: unlimited
-
-  // Branding (white-label options)
-  companyName            String?
-  companyLogo            String?
-  customDomain           String?
+  // Company/branding info
+  companyName   String?
+  companyLogo   String?
 
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -85,7 +57,6 @@ model User {
   sessions       Session[]
   socialAccounts SocialAccount[]
   webhooks       Webhook[]
-  subscription   Subscription?
 
   @@map("users")
 }
@@ -131,54 +102,6 @@ model VerificationToken {
 
   @@id([identifier, token])
   @@map("verification_tokens")
-}
-
-// Subscription model (Stripe subscriptions)
-model Subscription {
-  id                   String             @id @default(cuid())
-  userId               String             @unique
-  stripeSubscriptionId String             @unique
-  stripePriceId        String
-  stripeCurrentPeriodEnd DateTime?
-  plan                 SubscriptionPlan
-  status               SubscriptionStatus
-  cancelAtPeriodEnd    Boolean            @default(false)
-  createdAt            DateTime           @default(now())
-  updatedAt            DateTime           @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("subscriptions")
-}
-
-// Invoice/Payment history
-model Invoice {
-  id                String   @id @default(cuid())
-  userId            String
-  stripeInvoiceId   String   @unique
-  amount            Int      // in cents
-  currency          String   @default("usd")
-  status            String   // paid, open, void, uncollectible
-  invoicePdf        String?
-  hostedInvoiceUrl  String?
-  createdAt         DateTime @default(now())
-
-  @@map("invoices")
-}
-
-// Usage tracking for limits
-model UsageRecord {
-  id         String   @id @default(cuid())
-  userId     String
-  month      Int      // 1-12
-  year       Int
-  properties Int      @default(0)
-  content    Int      @default(0)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@unique([userId, month, year])
-  @@map("usage_records")
 }
 
 // Social media accounts connected by users

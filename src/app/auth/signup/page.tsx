@@ -1,14 +1,12 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 
 function SignUpForm() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const selectedPlan = searchParams.get("plan") || "FREE";
 
   const [formData, setFormData] = useState({
     name: "",
@@ -49,12 +47,8 @@ function SignUpForm() {
         throw new Error("Registration successful but sign in failed");
       }
 
-      // Redirect to checkout if paid plan selected
-      if (selectedPlan !== "FREE") {
-        router.push(`/dashboard/billing?upgrade=${selectedPlan}`);
-      } else {
-        router.push("/dashboard");
-      }
+      // Redirect to dashboard
+      router.push("/dashboard");
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -70,9 +64,7 @@ function SignUpForm() {
             Create Your Account
           </h1>
           <p className="text-gray-600">
-            {selectedPlan !== "FREE"
-              ? `Start your 14-day free trial of ${selectedPlan}`
-              : "Get started with our free plan"}
+            Start creating amazing real estate content with AI
           </p>
         </div>
 
@@ -169,14 +161,6 @@ function SignUpForm() {
             </Link>
           </p>
         </div>
-
-        {selectedPlan !== "FREE" && (
-          <div className="mt-4 p-3 bg-blue-50 rounded-lg text-center">
-            <p className="text-sm text-gray-700">
-              <strong>14-day free trial</strong> • No credit card required now
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );

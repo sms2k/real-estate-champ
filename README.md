@@ -1,460 +1,373 @@
-# 🏠 Real Estate Champ - AI-Powered Property Marketing Platform
+# Real Estate Champ - FREE Edition
 
-Transform property photos into professional marketing content in seconds! A multi-tenant SaaS platform designed for realtors to quickly capture property photos on their phones and automatically generate engaging social media posts, blog articles, and marketing materials using Google's Gemini AI.
+**AI-Powered Property Marketing Platform** - A completely FREE, open-source tool for real estate professionals to create stunning social media content, blog posts, and marketing materials using AI.
 
-## ✨ Key Features
+## 🎁 Free & Open Source
 
-### 📱 **Mobile-First Design**
-- **PWA (Progressive Web App)** - Install on iPhone or Android like a native app
-- **Camera Integration** - Take photos directly from the app
-- **Offline Support** - Works without internet, syncs when online
-- **Touch-Optimized** - Large buttons, easy navigation, perfect for on-site use
+This is a **100% FREE** application with **NO payment processing**, **NO subscriptions**, and **NO usage limits**. Give it to as many people as you want!
 
-### 🤖 **AI-Powered Content Generation**
-- **Blog Posts** - SEO-optimized articles (800+ words)
-- **Social Media Posts** - Platform-specific content for Facebook, Instagram, LinkedIn
-- **Google Business Profile Posts** - Local business optimized
-- **Smart Hashtags** - AI generates relevant hashtags
-- **Video Generation** - Coming soon with Gemini Veo 3
-- **Image Enhancement** - Coming soon with Imagen 3
+Perfect for:
+- Real estate agents who want to save time on content creation
+- Property managers marketing multiple listings
+- Real estate photographers offering value-added services
+- Anyone in real estate looking to leverage AI for marketing
 
-### 💰 **Multi-Tenant SaaS**
-- **Subscription Plans** - FREE, STARTER ($49), PRO ($99), ENTERPRISE ($299)
-- **Usage Limits** - Properties and monthly content generation tracking
-- **Stripe Integration** - Automated billing and subscription management
-- **White Label** - Custom branding for PRO+ plans
-- **Usage Analytics** - Track performance and ROI
+---
 
-### 🔗 **Integrations**
-- **WordPress** - Optional auto-posting to your blog
-- **Facebook** - Direct posting with OAuth
-- **Instagram** - Business account posting
-- **LinkedIn** - Professional network posting
-- **Google Business Profile** - Local SEO posting
+## ✨ Features
+
+### 📱 Mobile-First Design
+- **Camera Integration** - Take property photos directly from your phone
+- **Progressive Web App** - Install on your phone like a native app
+- **Touch-Optimized UI** - Large buttons, easy navigation
+- **Works Offline** - Basic functionality without internet
+
+### 🤖 AI Content Generation
+- **Blog Posts** - SEO-optimized property descriptions (800+ words)
+- **Social Media** - Platform-specific posts for Facebook, Instagram, LinkedIn, Google Business
+- **Smart Editing** - AI suggests improvements to your property photos
+- **Natural Language** - Chat with AI to gather property details
+
+### 🏠 Property Management
+- Unlimited properties
+- Unlimited image uploads
+- Unlimited AI content generation
+- Organize by status (Draft, Published, Archived)
+
+### 🔗 Integrations
+- **WordPress Plugin** - Sync content directly to your WordPress site
+- **Social Media** - Connect Facebook, Instagram, LinkedIn, Google Business
 - **Webhooks** - Send data to any external service
+- **RESTful API** - Build custom integrations
+
+---
 
 ## 🚀 Quick Start
 
 ### For Realtors (Users)
 
-1. **Sign Up**
-   - Visit https://your-platform-url.com
-   - Create account (14-day free trial on paid plans)
-   - Choose your plan
+1. **Get the URL** from whoever installed the platform for you
+2. **Open on your phone** and tap "Add to Home Screen"
+3. **Sign up** with your email
+4. **Start creating**:
+   - Tap "New Property"
+   - Take photos with your phone camera
+   - Chat with AI about the property
+   - Generate social media posts
+   - Publish!
 
-2. **Install Mobile App**
-   - iPhone: Safari → Share → "Add to Home Screen"
-   - Android: Chrome → Menu → "Install App"
-
-3. **Add First Property**
-   - Open app → Tap "+ Add Property"
-   - Take photos with camera
-   - Fill basic details
-   - Tap "Create Property"
-
-4. **Generate Content**
-   - Open property → Tap "Generate Social Media Posts"
-   - Wait 10-30 seconds
-   - AI creates posts for all platforms
-   - Review and post!
-
-**See detailed instructions:** [MOBILE-USAGE.md](./MOBILE-USAGE.md)
-
-### For Developers (Setup)
+### For Developers (Installation)
 
 #### Prerequisites
 - Node.js 18+ and npm
 - PostgreSQL database
-- Google AI API key (Gemini)
-- Stripe account (for payments)
+- Google AI API key (free tier available)
 
-#### Environment Setup
+#### Installation
 
 ```bash
-# Clone repository
-git clone https://github.com/yourusername/real-estate-champ.git
+# Clone the repository
+git clone <your-repo-url>
 cd real-estate-champ
 
 # Install dependencies
 npm install
 
-# Copy environment template
+# Set up environment variables
 cp .env.example .env
+nano .env  # Add your database URL and Google AI key
 
-# Edit .env with your values
-nano .env
-```
-
-#### Required Environment Variables
-
-```env
-# Database
-DATABASE_URL="postgresql://user:password@localhost:5432/realestatechamp"
-
-# NextAuth
-NEXTAUTH_SECRET="your-secret-key-min-32-chars"
-NEXTAUTH_URL="http://localhost:3000"
-
-# Google Gemini AI
-GOOGLE_AI_API_KEY="your-gemini-api-key"
-
-# Stripe (for payments)
-STRIPE_SECRET_KEY="sk_test_..."
-STRIPE_PUBLISHABLE_KEY="pk_test_..."
-STRIPE_WEBHOOK_SECRET="whsec_..."
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
-NEXT_PUBLIC_STRIPE_STARTER_PRICE_ID="price_..."
-NEXT_PUBLIC_STRIPE_PRO_PRICE_ID="price_..."
-NEXT_PUBLIC_STRIPE_ENTERPRISE_PRICE_ID="price_..."
-
-# Social Media OAuth (Optional)
-FACEBOOK_APP_ID="your-facebook-app-id"
-FACEBOOK_APP_SECRET="your-facebook-app-secret"
-LINKEDIN_CLIENT_ID="your-linkedin-client-id"
-LINKEDIN_CLIENT_SECRET="your-linkedin-client-secret"
-GOOGLE_BUSINESS_CLIENT_ID="your-google-client-id"
-GOOGLE_BUSINESS_CLIENT_SECRET="your-google-client-secret"
-```
-
-#### Database Setup
-
-```bash
-# Generate Prisma Client
+# Run database migrations
+npx prisma migrate deploy
 npx prisma generate
 
-# Run migrations
-npx prisma migrate dev
-
-# Seed database (optional)
-npx prisma db seed
-```
-
-#### Run Development Server
-
-```bash
-npm run dev
-```
-
-Open http://localhost:3000
-
-#### Build for Production
-
-```bash
+# Build the application
 npm run build
+
+# Start the server
 npm start
 ```
 
-## 📚 Documentation
-
-- **[Mobile Usage Guide](./MOBILE-USAGE.md)** - For realtors using the app
-- **[WordPress Integration](./WORDPRESS-INTEGRATION.md)** - WordPress setup and plugin
-- **[SaaS Setup Guide](./SAAS-SETUP.md)** - Business model and revenue guide
-- **[API Documentation](./docs/API.md)** - API endpoints reference
-
-## 🏗️ Architecture
-
-### Tech Stack
-
-**Frontend:**
-- Next.js 16 (App Router)
-- React 18
-- TypeScript
-- Tailwind CSS 3
-- PWA with next-pwa
-
-**Backend:**
-- Next.js API Routes
-- NextAuth.js v5 (Authentication)
-- Prisma ORM
-- PostgreSQL
-
-**AI/ML:**
-- Google Gemini 2.0 (Text generation)
-- Gemini Veo 3 (Video - coming soon)
-- Imagen 3 (Image editing - coming soon)
-
-**Payments:**
-- Stripe Checkout
-- Stripe Customer Portal
-- Subscription webhooks
-
-**Deployment:**
-- Vercel (recommended)
-- Docker support
-- Any Node.js hosting
-
-### Database Schema
-
-```
-User
-├── Properties (1:many)
-│   ├── Images
-│   ├── Videos
-│   └── Generated Content
-├── Social Accounts
-├── Subscription
-└── Usage Records
-
-Subscription
-└── Invoices
-```
-
-See full schema: `prisma/schema.prisma`
-
-### API Endpoints
-
-**Authentication:**
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/[...nextauth]` - NextAuth.js handlers
-
-**Properties:**
-- `GET /api/properties` - List properties
-- `POST /api/properties` - Create property
-- `GET /api/properties/[id]` - Get single property
-- `PATCH /api/properties/[id]` - Update property
-- `DELETE /api/properties/[id]` - Delete property
-
-**Content Generation:**
-- `POST /api/properties/[id]/generate` - Generate AI content
-- `POST /api/properties/[id]/images` - Upload images
-- `POST /api/chat` - AI chat for property info
-
-**Billing:**
-- `POST /api/billing/checkout` - Create checkout session
-- `POST /api/billing/portal` - Billing portal access
-
-**Webhooks:**
-- `POST /api/webhooks/stripe` - Stripe webhook handler
-
-## 💼 Business Model
-
-### Pricing Tiers
-
-| Plan | Price | Properties | Content/Month | Features |
-|------|-------|------------|---------------|----------|
-| **FREE** | $0 | 5 | 10 | Basic features |
-| **STARTER** | $49 | 25 | 100 | Video generation |
-| **PRO** | $99 | Unlimited | Unlimited | White label |
-| **ENTERPRISE** | $299 | Unlimited | Unlimited | API access, priority support |
-
-### Revenue Potential
-
-With 100 paying customers:
-- 60% Starter ($49) = $2,940/mo
-- 30% Pro ($99) = $2,970/mo
-- 10% Enterprise ($299) = $2,990/mo
-
-**Total: $8,900/month = $106,800/year**
-
-See detailed business plan: [SAAS-SETUP.md](./SAAS-SETUP.md)
-
-## 🔧 Configuration
-
-### Pricing Configuration
-
-Edit `src/lib/pricing.ts` to customize:
-- Plan features
-- Usage limits
-- Pricing amounts
-- Feature flags
-
-### AI Configuration
-
-Edit `src/lib/ai/gemini.ts` to customize:
-- Model selection
-- Temperature settings
-- Prompt templates
-- Content formats
-
-### WordPress Integration
-
-Two modes available:
-
-1. **SaaS Mode** (Recommended)
-   - Deploy standalone
-   - Optional WordPress sync
-   - Best for mobile usage
-
-2. **WordPress Plugin**
-   - Runs in WordPress
-   - Located in `wordpress-plugin/`
-   - See [WORDPRESS-INTEGRATION.md](./WORDPRESS-INTEGRATION.md)
-
-## 🔒 Security
-
-- ✅ HTTPS required in production
-- ✅ JWT session tokens
-- ✅ bcrypt password hashing
-- ✅ CSRF protection
-- ✅ Rate limiting on API routes
-- ✅ Input validation with Zod
-- ✅ SQL injection prevention (Prisma)
-- ✅ XSS protection
-- ✅ Secure headers middleware
-
-## 📱 PWA Features
-
-- **Offline Mode** - Works without internet
-- **Install Prompt** - Add to home screen
-- **Push Notifications** - Coming soon
-- **Background Sync** - Automatic data sync
-- **Camera Access** - Direct photo capture
-- **Fast Loading** - Cached assets
-
-## 🎨 Customization
-
-### Branding
-
-1. Update `public/` assets:
-   - `favicon.ico`
-   - `icon-192x192.png`
-   - `icon-512x512.png`
-
-2. Edit `public/manifest.json`:
-   - App name
-   - Description
-   - Theme colors
-
-3. Update `src/app/layout.tsx` metadata
-
-### Styling
-
-- Edit `tailwind.config.ts` for theme
-- Modify `src/app/globals.css` for global styles
-- Component styles in respective files
-
-## 🧪 Testing
-
-```bash
-# Unit tests
-npm test
-
-# E2E tests
-npm run test:e2e
-
-# Type checking
-npm run type-check
-
-# Linting
-npm run lint
-```
-
-## 📈 Analytics & Monitoring
-
-**Built-in:**
-- Usage tracking per user
-- Subscription analytics
-- Content generation metrics
-
-**Recommended Integrations:**
-- Google Analytics
-- Sentry (error tracking)
-- LogRocket (session replay)
-- Mixpanel (product analytics)
-
-## 🚢 Deployment
-
-### Vercel (Recommended)
-
-```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel
-
-# Production
-vercel --prod
-```
-
-### Docker
-
-```bash
-# Build
-docker build -t real-estate-champ .
-
-# Run
-docker run -p 3000:3000 --env-file .env real-estate-champ
-```
-
-### Manual Deployment
-
-```bash
-# Build
-npm run build
-
-# Start
-npm start
-```
-
-**Environment:** Set all environment variables on your hosting platform
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
-
-## 📄 License
-
-This project is proprietary software. All rights reserved.
-
-For licensing inquiries: contact@realestatechamp.com
-
-## 🆘 Support
-
-- **Email:** support@realestatechamp.com
-- **Documentation:** https://docs.realestatechamp.com
-- **Video Tutorials:** https://youtube.com/realestatechamp
-- **Discord Community:** https://discord.gg/realestatechamp
-
-## 🗺️ Roadmap
-
-### Q1 2025
-- ✅ Core SaaS platform
-- ✅ Mobile PWA
-- ✅ AI content generation
-- ✅ Multi-tenant architecture
-
-### Q2 2025
-- 🎥 Video generation (Gemini Veo 3)
-- 🎨 Image enhancement (Imagen 3)
-- 📊 Advanced analytics
-- 🔔 Push notifications
-
-### Q3 2025
-- 🤖 AI property descriptions
-- 🗣️ Voice input
-- 🌐 Multi-language support
-- 📱 Native mobile apps
-
-### Q4 2025
-- 🏢 Team collaboration
-- 📈 CRM integration
-- 🎯 Lead tracking
-- 💬 Chatbot for property inquiries
-
-## 👏 Credits
-
-Built with:
-- [Next.js](https://nextjs.org/)
-- [Prisma](https://prisma.io/)
-- [NextAuth.js](https://next-auth.js.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Google Gemini](https://deepmind.google/technologies/gemini/)
-- [Stripe](https://stripe.com/)
-
-## 📞 Contact
-
-- **Website:** https://realestatechamp.com
-- **Email:** hello@realestatechamp.com
-- **Twitter:** @realestatechamp
-- **LinkedIn:** linkedin.com/company/realestatechamp
+The app will be available at `http://localhost:3000`
 
 ---
 
-Made with ❤️ for realtors who want to work smarter, not harder.
+## 📋 Environment Variables
 
-**Start transforming your property marketing today! 🚀**
+Create a `.env` file with these required variables:
+
+```env
+# Database (PostgreSQL)
+DATABASE_URL="postgresql://user:password@localhost:5432/realestatechamp"
+
+# Google AI (for content generation)
+GOOGLE_AI_API_KEY="your-google-ai-key-here"
+# Get from: https://makersuite.google.com/app/apikey
+
+# Authentication
+NEXTAUTH_SECRET="generate-with-openssl-rand-base64-32"
+NEXTAUTH_URL="http://localhost:3000"  # Change to your domain in production
+```
+
+---
+
+## 📱 Mobile Usage
+
+### Installing the PWA (Progressive Web App)
+
+**On iPhone:**
+1. Open Safari and go to your site
+2. Tap the Share button
+3. Scroll down and tap "Add to Home Screen"
+4. Tap "Add" - Done!
+
+**On Android:**
+1. Open Chrome and go to your site
+2. Tap the three dots menu
+3. Tap "Install App" or "Add to Home Screen"
+4. Tap "Install" - Done!
+
+### Taking Property Photos
+- The app uses your phone's camera directly
+- Take 5-15 photos of each property
+- Photos are optimized automatically
+- Works in landscape or portrait mode
+
+### Content Generation Workflow
+1. **Create Property** (2 minutes)
+   - Tap camera icon
+   - Take photos of the property
+   - Fill in basic details
+
+2. **AI Chat** (3 minutes)
+   - Answer AI's questions about the property
+   - Or paste MLS description
+   - AI extracts structured data
+
+3. **Generate Content** (1 minute)
+   - Tap "Generate Content"
+   - Select platforms (Facebook, Instagram, Blog, etc.)
+   - AI creates custom content for each platform
+
+4. **Review & Publish** (2 minutes)
+   - Review AI-generated posts
+   - Make any edits
+   - Publish directly or schedule
+
+**Total Time: ~8 minutes per property** (vs. 2+ hours manual)
+
+---
+
+## 🔌 WordPress Plugin
+
+A WordPress plugin is included for seamless integration!
+
+### Installation
+
+```bash
+# Copy plugin to WordPress
+cp -r wordpress-plugin/real-estate-champ /path/to/wordpress/wp-content/plugins/
+
+# Or zip and upload via WordPress admin
+cd wordpress-plugin
+zip -r real-estate-champ.zip real-estate-champ/
+```
+
+Then activate via WordPress admin → Plugins → Real Estate Champ → Activate
+
+### Configuration
+
+1. Go to **Real Estate Champ** → **Settings** in WordPress admin
+2. Enter your **Google AI API Key**
+3. (Optional) Configure social media OAuth credentials
+4. Save settings
+
+The plugin creates:
+- Custom database tables for properties and content
+- REST API endpoints for the mobile app
+- Admin interface for management
+
+---
+
+## 🛠 Tech Stack
+
+- **Frontend**: Next.js 16, React 19, TailwindCSS
+- **Backend**: Next.js API Routes, Prisma ORM
+- **Database**: PostgreSQL
+- **Authentication**: NextAuth.js v5
+- **AI**: Google Gemini 2.0 Flash
+- **PWA**: next-pwa, Workbox
+- **Image Upload**: React Dropzone
+- **Form Validation**: Zod, React Hook Form
+
+---
+
+## 📁 Project Structure
+
+```
+real-estate-champ/
+├── src/
+│   ├── app/                    # Next.js app router
+│   │   ├── api/               # API routes
+│   │   ├── auth/              # Auth pages (signin, signup)
+│   │   └── dashboard/         # Dashboard pages
+│   ├── lib/                   # Utilities
+│   │   ├── ai/               # AI integration (Gemini)
+│   │   ├── api/              # API helpers
+│   │   └── auth/             # Authentication logic
+│   └── types/                 # TypeScript types
+├── prisma/
+│   └── schema.prisma          # Database schema
+├── wordpress-plugin/          # WordPress plugin
+└── public/                    # Static assets
+```
+
+---
+
+## 🎯 API Endpoints
+
+All endpoints require authentication except `/api/auth/*`
+
+### Properties
+- `GET /api/properties` - List all properties
+- `POST /api/properties` - Create property
+- `GET /api/properties/[id]` - Get single property
+- `PUT /api/properties/[id]` - Update property
+- `DELETE /api/properties/[id]` - Delete property
+- `POST /api/properties/[id]/images` - Upload images
+- `POST /api/properties/[id]/generate` - Generate AI content
+
+### Authentication
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/[...nextauth]` - NextAuth.js handlers
+
+### Chat
+- `POST /api/chat` - Chat with AI about property
+
+### Social Accounts
+- `GET /api/social-accounts` - List connected accounts
+- `POST /api/social-accounts` - Connect new account
+
+---
+
+## 🚢 Deployment Options
+
+### Option 1: Vercel (Recommended)
+
+```bash
+npm i -g vercel
+vercel  # Follow prompts
+```
+
+Add environment variables in Vercel dashboard.
+
+### Option 2: Docker
+
+```bash
+docker build -t real-estate-champ .
+docker run -p 3000:3000 --env-file .env real-estate-champ
+```
+
+### Option 3: VPS/Server
+
+```bash
+# Install dependencies
+npm install
+
+# Build
+npm run build
+
+# Run with PM2 (or similar)
+pm2 start npm --name "real-estate-champ" -- start
+```
+
+---
+
+## 🎁 Distribution & Licensing
+
+This is **FREE software**. You can:
+- ✅ Give it to anyone
+- ✅ Install it on multiple servers
+- ✅ Modify the code
+- ✅ Use it commercially
+- ✅ White-label it
+- ✅ Sell setup/support services
+
+**Just don't claim you built it from scratch!**
+
+### Sharing with Clients
+
+To give this to a realtor:
+
+1. **Set up a server** (DigitalOcean, AWS, Vercel, etc.)
+2. **Install the application** following the steps above
+3. **Create an admin account** for yourself
+4. **Give them the URL** and help them create an account
+5. **Done!** They can use it unlimited, forever, free
+
+---
+
+## 🔒 Security
+
+- Password hashing with bcrypt
+- JWT-based sessions
+- SQL injection prevention via Prisma
+- XSS protection
+- CSRF tokens
+- Environment variable encryption
+- Rate limiting on API routes
+
+---
+
+## 🤝 Contributing
+
+This is free software! Contributions welcome:
+1. Fork the repo
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
+
+---
+
+## 📞 Support
+
+- **Documentation**: See docs in the `/docs` folder
+- **Issues**: Open an issue on GitHub
+- **WordPress Plugin**: See `wordpress-plugin/README.md`
+
+---
+
+## 📝 License
+
+ISC License - Free to use, modify, and distribute!
+
+---
+
+## 🙏 Credits
+
+Built with:
+- Google Gemini AI
+- Next.js team
+- Prisma team
+- NextAuth.js team
+- All the amazing open source contributors
+
+---
+
+## 🗺 Roadmap
+
+Future enhancements (feel free to contribute!):
+- Video generation support (when Google Veo 3 API is available)
+- Image editing with Imagen 3
+- Multi-language support
+- Property comparison tools
+- Analytics dashboard
+- Email campaigns
+- CRM integration
+- 3D virtual tours
+
+---
+
+**Made with ❤️ for the real estate community**
+
+No subscriptions. No limits. Just great AI-powered content creation.

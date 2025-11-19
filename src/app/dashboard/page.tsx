@@ -1,37 +1,25 @@
 import { requireAuth } from "@/lib/auth/utils";
 import { prisma } from "@/lib/db";
-import { getCurrentMonthUsage } from "@/lib/auth/session";
 import Link from "next/link";
 
 async function getPropertiesData(userId: string) {
-  const [properties, usage, user] = await Promise.all([
-    prisma.property.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
-      take: 10,
-      include: {
-        images: {
-          take: 1,
-        },
+  const properties = await prisma.property.findMany({
+    where: { userId },
+    orderBy: { createdAt: "desc" },
+    take: 10,
+    include: {
+      images: {
+        take: 1,
       },
-    }),
-    getCurrentMonthUsage(userId),
-    prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        propertiesLimit: true,
-        monthlyContentLimit: true,
-        subscriptionPlan: true,
-      },
-    }),
-  ]);
+    },
+  });
 
-  return { properties, usage, user };
+  return { properties };
 }
 
 export default async function DashboardPage() {
   const authUser = await requireAuth();
-  const { properties, usage, user } = await getPropertiesData(authUser.id as string);
+  const { properties } = await getPropertiesData(authUser.id as string);
 
   return (
     <div className="space-y-8">
@@ -40,7 +28,7 @@ export default async function DashboardPage() {
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Properties</h1>
           <p className="text-gray-600 mt-1">
-            Manage your property listings and generate content
+            Manage your property listings and generate unlimited content with AI
           </p>
         </div>
         <Link
@@ -51,52 +39,32 @@ export default async function DashboardPage() {
         </Link>
       </div>
 
-      {/* Usage Stats */}
+      {/* Stats */}
       <div className="grid md:grid-cols-3 gap-6">
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
           <div className="text-sm font-medium text-gray-600 mb-1">
-            Properties
+            Total Properties
           </div>
           <div className="text-3xl font-bold text-gray-900">
             {properties.length}
-            <span className="text-lg text-gray-500 font-normal">
-              {" "}
-              / {user?.propertiesLimit === 999999 ? "∞" : user?.propertiesLimit}
-            </span>
           </div>
+          <p className="text-sm text-green-600 mt-1">Unlimited</p>
         </div>
 
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
           <div className="text-sm font-medium text-gray-600 mb-1">
-            Content This Month
+            AI Content Generation
           </div>
-          <div className="text-3xl font-bold text-gray-900">
-            {usage.content}
-            <span className="text-lg text-gray-500 font-normal">
-              {" "}
-              /{" "}
-              {user?.monthlyContentLimit === 999999
-                ? "∞"
-                : user?.monthlyContentLimit}
-            </span>
-          </div>
+          <div className="text-3xl font-bold text-gray-900">∞</div>
+          <p className="text-sm text-green-600 mt-1">Unlimited & Free</p>
         </div>
 
         <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
           <div className="text-sm font-medium text-gray-600 mb-1">
-            Current Plan
+            Platform
           </div>
-          <div className="text-3xl font-bold text-gray-900">
-            {user?.subscriptionPlan}
-          </div>
-          {user?.subscriptionPlan === "FREE" && (
-            <Link
-              href="/dashboard/billing"
-              className="text-sm text-blue-600 hover:text-blue-700 mt-2 inline-block"
-            >
-              Upgrade Plan →
-            </Link>
-          )}
+          <div className="text-3xl font-bold text-gray-900">FREE</div>
+          <p className="text-sm text-green-600 mt-1">Always free, no limits!</p>
         </div>
       </div>
 

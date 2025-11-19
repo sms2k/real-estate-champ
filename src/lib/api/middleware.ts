@@ -1,7 +1,6 @@
 import { NextRequest } from "next/server";
 import { auth } from "@/lib/auth/auth";
 import { ApiErrors } from "./errors";
-import { checkUsageLimit } from "@/lib/auth/session";
 
 /**
  * Middleware to require authentication
@@ -33,21 +32,14 @@ export async function requireAdminMiddleware(request: NextRequest) {
 }
 
 /**
- * Middleware to check usage limits
+ * Middleware to check usage limits (now unlimited - no restrictions)
  */
 export async function checkUsageLimitMiddleware(
   userId: string,
   type: "properties" | "content"
 ) {
-  const { allowed, current, limit } = await checkUsageLimit(userId, type);
-
-  if (!allowed) {
-    throw ApiErrors.LimitExceeded(
-      `You've reached your ${type} limit (${current}/${limit}). Please upgrade your plan.`
-    );
-  }
-
-  return { current, limit };
+  // Free version - no limits!
+  return { current: 0, limit: -1 }; // -1 indicates unlimited
 }
 
 /**
